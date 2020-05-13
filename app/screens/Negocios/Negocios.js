@@ -23,8 +23,8 @@ export default function Negocios({ route, navigation }) {
     const { negocio } = route.params;
     const { titulo } = route.params;
     
-    const [negocios, setNegocios] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
+    const [negocios, setNegocios] = useState(null);
+    // const [isLoading, setIsLoading] = useState(false)
 
 
     useEffect(() => {
@@ -45,21 +45,29 @@ export default function Negocios({ route, navigation }) {
 
     async function getNegocios(token) {
         try {
-          setIsLoading(true)
+          // setIsLoading(true)
           const res = await axios.get(`${API}/business/${negocio}`, {
               headers: {
                   'Authorization': `Bearer ${token}`,
               }
           })
           setNegocios(res.data.data)
-          setIsLoading(false)
+          // setIsLoading(false)
        } catch (error) {
           setIsLoading(false)
           console.log(error)
        }
     }
 
+
+
+
+  if (negocios === null) {
     return (
+      <Loading isVisible={true} text="Cargando..." /> 
+    );
+  }
+   return (negocios.length>0) ? (
     <View style={{ flex: 1, backgroundColor: "rgba(34, 181, 110, 0.1)"}}>
       <View style={styles.containerSearch}>
         <Text style={{ color: '#1B5050', fontWeight: 'bold', fontSize: hp(2), marginBottom: wp(1) }}>{titulo}</Text>
@@ -75,15 +83,16 @@ export default function Negocios({ route, navigation }) {
         </View>
       </View>
       <View>
-      <ListNegocios 
-        negocios={negocios}
-        category={negocio} //categoria string
-        navigation={navigation}
-      />
+        <ListNegocios 
+          negocios={negocios}
+          category={negocio} //categoria string
+          navigation={navigation}
+        />
+      </View>
     </View>
-      <Loading text="Cargando negocios" isVisible={isLoading} />
-    </View>
-    );
+   ) : (
+     <Text style={{textAlign: 'center'}}>aun no hay negocios</Text>
+   )
 }
 const shadow = {
     shadowColor: "#000",

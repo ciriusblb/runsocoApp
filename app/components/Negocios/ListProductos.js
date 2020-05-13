@@ -5,7 +5,8 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     Image,
-    FlatList
+    FlatList,
+    ScrollView
 } from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -19,8 +20,6 @@ export default function ListProductos(props) {
   }
 
   return (
-    <View>
-      {productos ? (
         <FlatList
           style={{paddingHorizontal: wp(3) }}
           data={productos}
@@ -29,20 +28,15 @@ export default function ListProductos(props) {
           )}
           keyExtractor={(item, index) => index.toString()}
         //   onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
+          // onEndReachedThreshold={0.5}
         />
-      ) : (
-        <View style={styles.loaderRestaurants}>
-          <ActivityIndicator size="large" />
-          <Text>Cargando restaurantes</Text>
-        </View>
-      )}
-    </View>
+  
+    
   );
 }
 function Producto(props) {
   const { producto, navigation,setShowCar, addToCar } = props;
-
+  const [disabled, setDisabled] = useState(false);
 
   return (
     <View style={{ borderRadius: wp(1), paddingTop: wp(6), paddingBottom: wp(2), paddingHorizontal: wp(2.4), backgroundColor: '#fff', marginBottom: wp(2), ...shadow, position: 'relative' }}>
@@ -59,7 +53,8 @@ function Producto(props) {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
         <Text style={{ color: '#00a680', fontSize: hp(2), fontWeight: 'bold' }}>$/. {producto.price}</Text>
         <TouchableOpacity style={{ backgroundColor: 'rgba(34, 181, 110, 0.1)', padding: wp(3), borderRadius: wp(5) }}
-          onPress={() => {addToCar(producto._id, producto.name, producto.price); setShowCar(true)}}
+          onPress={() => {addToCar(producto._id, producto.name, producto.price); setShowCar(true), setDisabled(true)}}
+          disabled={disabled}
           >
             <Icon 
             name="plus"

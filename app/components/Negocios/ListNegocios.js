@@ -22,27 +22,20 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 
 
 export default function ListNegocios({ route, navigation, negocios, category }) {
-    return (
-        <View>
-          {negocios ? (
-            <FlatList
-              style={{paddingHorizontal: wp(3) }}
-              data={negocios}
-              renderItem={negocio => (
-                <Negocio negocio={negocio.item} navigation={navigation} category={category}/>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            //   onEndReached={handleLoadMore}
-            //   onEndReachedThreshold={0.5}
-            />
-          ) : (
-            <View style={styles.loaderRestaurants}>
-              <ActivityIndicator size="large" />
-              <Text>Cargando restaurantes</Text>
-            </View>
+  return (
+    <View>
+        <FlatList
+          style={{paddingHorizontal: wp(3) }}
+          data={negocios}
+          renderItem={negocio => (
+            <Negocio negocio={negocio.item} navigation={navigation} category={category}/>
           )}
-        </View>
-      );
+          keyExtractor={(item, index) => index.toString()}
+        //   onEndReached={handleLoadMore}
+        //   onEndReachedThreshold={0.5}
+        />
+    </View>
+  );
 
 }
 
@@ -53,7 +46,7 @@ function Negocio(props) {
         <View style={{ backgroundColor: '#fff', marginBottom: wp(2), ...shadow, height: wp(60) }}>
             <Image
             style={{ height: '70%', resizeMode: 'cover' }}
-            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTNk7BKyAVFtcsnP7ykx1xECUQ2v0-kJ3sNK2HLbIQl4LHtBxoB&usqp=CAU' }} 
+            source={{ uri:negocio.img }} 
             />
             <View style={{ padding: wp(2), height: '50%', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <View>
@@ -71,7 +64,7 @@ function Negocio(props) {
                 <Icon
                 style={{ fontSize: hp(3), color: '#00a680'}}
                 name="door-open"
-                onPress={()=> navigation.navigate("Productos", {negocioName: negocio.name, id:negocio._id, category: category })}
+                onPress={()=> navigation.navigate("Productos", {negocioName: negocio.name, id:negocio._id, category: category, subCategorias: negocio.categories })}
                 />
             </TouchableOpacity>
             </View> 
@@ -99,9 +92,5 @@ const styles = StyleSheet.create({
         padding: wp(3),
         borderRadius: wp(2),
         marginBottom: wp(2)
-      },
-      loaderRestaurants: {
-        marginTop: 10,
-        marginBottom: 10
-    },
+      }
 });

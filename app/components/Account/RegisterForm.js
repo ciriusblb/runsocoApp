@@ -59,6 +59,7 @@ function RegisterForm(props) {
         })
         console.log("res ", res.data.token)
         await AsyncStorage.setItem('token', res.data.token)
+        await AsyncStorage.setItem('_id', res.data.data._id)
         await AsyncStorage.setItem('email', email)
         setIsVisibleLoading(false)
         navigation.navigate("Mi cuenta")

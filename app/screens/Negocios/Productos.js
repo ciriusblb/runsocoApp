@@ -25,8 +25,11 @@ export default function Productos({navigation,route}) {
   const { negocioName } = route.params;
   const { id } = route.params;
   const { category } = route.params;
+  const { subCategorias } = route.params;
 
   const [productos, setProductos] = useState([])
+  const [productosFiltrados, setProductosFiltrados] = useState([])
+  const [activeCategoria, setActiveCategoria] = useState(""); 
 
   const [productosOfCar, setProductosOfCar] = useState([])
 
@@ -56,12 +59,26 @@ export default function Productos({navigation,route}) {
                 'Authorization': `Bearer ${token}`,
             }
         })
+        setProductosFiltrados(res.data.data)
         setProductos(res.data.data)
+
         setIsLoading(false)
       } catch (error) {
         setIsLoading(false)
         console.log(error)
       }
+  }
+  const pressTodos = () => {
+    setActiveCategoria("")
+    setProductos(productosFiltrados)
+  }
+  const pressSubCategoria = subCategoria => {
+    setActiveCategoria(subCategoria)
+
+    let data = productosFiltrados.filter((item)=>{
+      return item.category == subCategoria;
+    })
+    setProductos(data)
   }
 
   const goToCarScreen = () => {
@@ -76,29 +93,26 @@ export default function Productos({navigation,route}) {
               <Text style={{ fontSize: hp(1.8)}}>10:00 a.m a 09.00 p.m</Text>
             </View>
           </View>
-          {/* <FlatList
+          <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity 
+              onPress={()=> pressTodos("")}
+            >
+              <Text style={[{ paddingLeft: wp(3), paddingBottom: 10},  activeCategoria==="" ? styles.linkActive : null]}>Todos</Text>
+            </TouchableOpacity> 
+          <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={[
-              { id: '1', title: 'Familiar' },
-              { id: '2', title: 'Individual' },
-              { id: '3', title: 'Especial' },
-            ]}
-            keyExtractor={item => item.id}
+            data={subCategorias}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => 
-            <TouchableOpacity>
-              <Text style={[{ paddingHorizontal: wp(3), fontSize: hp(1.8) }, item.id === '1' ? styles.linkActive : null]}>{ item.title }</Text>
+            <TouchableOpacity 
+              onPress={()=> pressSubCategoria(item.description)}
+            >
+              <Text style={[{ paddingLeft: wp(3), paddingBottom: 10}, item.description === activeCategoria ? styles.linkActive : null]}>{ item.description }</Text>
             </TouchableOpacity>   
             }
-          /> */}
-          {/* <FlatList 
-            style={{ paddingHorizontal: wp(4) }}
-            data={productos}
-            keyExtractor={producto => producto._id}
-            renderItem={ producto  => 
-              <Producto producto={producto} setShowCar={setShowCar} setProductosOfCar={setProductosOfCar}/>
-            }
-          /> */}
+          />
+          </View>
           <ListProductos
             productos={productos}
             navigation={navigation}
@@ -108,6 +122,7 @@ export default function Productos({navigation,route}) {
             // addToCar={addToCar}
           />
           {showCar && (
+
             <TouchableOpacity style={{ backgroundColor: '#00a680', padding: 15, borderRadius: 25, position: 'absolute', bottom: 10, right: 10 }} onPress={goToCarScreen}>
                 <Icon 
                   name="shopping-cart"

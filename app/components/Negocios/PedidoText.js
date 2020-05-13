@@ -8,7 +8,7 @@ export default function PedidoText(props) {
 
   const goToPedidos = () => {
     setIsVisibleModal(false);
-    // navigation.navigate('Pedidos')
+    navigation.navigate('Pedidos', {reloadPedido:'true'})
   }
 
   return (
@@ -16,7 +16,7 @@ export default function PedidoText(props) {
       <Text style={styles.text}>Listo, su pedido sera procesado por una de nuestras runsoquers, Puede verificarlo en la seccion de pedidos</Text>
       
       <Button
-        title="OK"
+        title="Ir a la seccion de pedidos"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={goToPedidos}
